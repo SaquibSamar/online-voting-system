@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Voting panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-lines"></div>
+  <header>Online voting system</header>
+
+  <div class="wrap">
+    <div class="grid">
+
+      <!-- Left Panel -->
+      <div class="panel">
+        <div class="header-row">
+          <div>
+            <strong id="panelTitle"><h1>Authentication</h1></strong>
+            <div class="small">Not signed in</div>
+          </div>
+          <div>
+            <button id="signOutBtn" class="btn ghost" style="display:none" onclick="signOutUser()">Sign Out</button>
+          </div>
+        </div>
+
+        <div class="toggle">
+          <div id="segAdmin" class="seg" onclick="setMode('admin')">Admin</div>
+          <div id="segVoter" class="seg" onclick="setMode('voter')">Voter</div>
+        </div>
+
+        <!-- Auth Section -->
+        <div id="authBox">
+          <label>Email</label>
+          <input id="email" type="email" placeholder="you@domain.com" />
+
+          <label>Password</label>
+          <input id="password" type="password" placeholder="min 6 chars" />
+
+          <div class="auth-buttons">
+            <button class="btn" onclick="signIn()">Sign In</button>
+            <button class="btn ghost" onclick="signUp()">Sign Up (Voter)</button>
+          </div>
+
+          <input id="adminSecret" type="text" placeholder=" admin secret — optional" />
+        </div>
+
+        <!-- Admin Section -->
+        <div id="adminControls" style="display:none">
+          <h3>Admin — Add Member</h3>
+          <label>Member Name</label>
+          <input id="memberName" type="text" placeholder="e.g. Alice" />
+          <label>Member Description</label>
+          <input id="memberDesc" type="text" placeholder="short bio" />
+          <button class="btn" onclick="addMember()">Add Member</button>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="stage">
+        <div class="panel">
+          <div class="header-row">
+            <h2>Members</h2>
+            <div class="small">Signed as: <span id="signedAs">Guest</span></div>
+          </div>
+          <div id="membersWrap" class="membersList"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script src="app.js"></script>
+</body>
+</html>
