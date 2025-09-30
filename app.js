@@ -10,124 +10,95 @@ const firebaseConfig = {
   appId: "1:586108497801:web:470c5ed91d588738edfb58",
   measurementId: "G-RH9Q4LNTEW"
 };
-};
 firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
 const db = firebase.firestore();
 
-// ============================
-// DOM Elements
-// ============================
-const emailEl = document.getElementById("email");
-const passEl = document.getElementById("password");
-const signedAs = document.getElementById("signedAs");
+const memberName = document.getElementById("memberName");
+const addMemberBtn = document.getElementById("addMemberBtn");
+const membersList = document.getElementById("membersList");
 
-const adminControls = document.getElementById("adminControls");
-const membersWrap = document.getElementById("membersWrap");
+const voterName = document.getElementById("voterName");
+const registerVoterBtn = document.getElementById("registerVoterBtn");
+const votersList = document.getElementById("votersList");
+const voterSelect = document.getElementById("voterSelect");
+const votingOptions = document.getElementById("votingOptions");
 
-const segAdmin = document.getElementById("segAdmin");
-const segVoter = document.getElementById("segVoter");
-const signOutBtn = document.getElementById("signOutBtn");
-
-// Mode (admin / voter)
-let currentMode = "voter";
-
-// ============================
-// Mode Switcher
-// ============================
-function setMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll(".seg").forEach(seg => seg.classList.remove("active"));
-  if (mode === "admin") segAdmin.classList.add("active");
-  else segVoter.classList.add("active");
-}
-setMode("voter"); // default
-
-// ============================
-// Authentication
-// ============================
-function signUp() {
-  const email = emailEl.value;
-  const password = passEl.value;
-
-  if (password.length < 6) {
-    alert("Password must be at least 6 characters.");
-    return;
-  }
-
-  auth.createUserWithEmailAndPassword(email, password)
-    .then(() => alert("Voter registered successfully!"))
-    .catch(err => alert(err.message));
-}
-
-function signIn() {
-  const email = emailEl.value;
-  const password = passEl.value;
-
-  auth.signInWithEmailAndPassword(email, password)
-    .catch(err => alert(err.message));
-}
-
-function signOutUser() {
-  auth.signOut();
-}
-
-// ============================
-// Auth State Listener
-// ============================
-auth.onAuthStateChanged(user => {
-  if (user) {
-    signedAs.textContent = user.email;
-    signOutBtn.style.display = "block";
-
-    // Show admin panel if in admin mode
-    if (currentMode === "admin") {
-      adminControls.style.display = "block";
-    } else {
-      adminControls.style.display = "none";
-    }
-  } else {
-    signedAs.textContent = "Guest";
-    signOutBtn.style.display = "none";
-    adminControls.style.display = "none";
+// Add member
+addMemberBtn.addEventListener("click", () => {
+  if (memberName.value) {
+    db.collection("members").add({ name: memberName.value });
+    memberName.value = "";
   }
 });
 
-// ============================
-// Admin — Add Member
-// ============================
-function addMember() {
-  const name = document.getElementById("memberName").value;
-  const desc = document.getElementById("memberDesc").value;
-
-  if (!name) {
-    alert("Enter member name");
-    return;
+// Add voter
+registerVoterBtn.addEventListener("click", () => {
+  if (voterName.value) {
+    db.collection("voters").add({ name: voterName.value });
+    voterName.value = "";
   }
+});
 
-  db.collection("members").add({
-    name: name,
-    desc: desc
-  }).then(() => {
-    document.getElementById("memberName").value = "";
-    document.getElementById("memberDesc").value = "";
-  });
-}
-
-// ============================
-// Load Members in Real-time
-// ============================
+// Load members and voting options
 db.collection("members").onSnapshot(snapshot => {
-  membersWrap.innerHTML = "";
+  membersList.innerHTML = "";
+  votingOptions.innerHTML = "";
+
   snapshot.forEach(doc => {
-    const m = doc.data();
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <h3>${m.name}</h3>
-      <p>${m.desc || ""}</p>
-    `;
-    membersWrap.appendChild(card);
+    // Member list for admin
+    const div = document.createElement("div");
+    div.textContent = doc.data().name;
+
+    // Delete member button
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "Delete";
+    delBtn.onclick = () => db.collection("members").doc(doc.id).delete();
+    div.appendChild(delBtn);
+
+    membersList.appendChild(div);
+
+    // Voting buttons
+    const voteBtn = document.createElement("button");
+    voteBtn.textContent = doc.data().name;
+    voteBtn.onclick = () => castVote(voterSelect.value, doc.id);
+    votingOptions.appendChild(voteBtn);
   });
 });
+
+// Load voters
+db.collection("voters").onSnapshot(snapshot => {
+  votersList.innerHTML = "";
+  voterSelect.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    // Voter list for admin
+    const div = document.createElement("div");
+    div.textContent = doc.data().name;
+
+    // Delete voter button
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "Delete";
+    delBtn.onclick = () => db.collection("voters").doc(doc.id).delete();
+    div.appendChild(delBtn);
+
+    votersList.appendChild(div);
+
+    // Voter select options
+    const option = document.createElement("option");
+    option.value = doc.id;
+    option.textContent = doc.data().name;
+    voterSelect.appendChild(option);
+  });
+});
+
+// Cast vote
+function castVote(voterId, memberId) {
+  if (!voterId) {
+    alert("Please select a voter first.");
+    return;
+  }
+
+  db.collection("votes").doc(voterId).set({ memberId })
+    .then(() => alert("Vote cast!"))
+    .catch(err => alert(err.message));
+}
