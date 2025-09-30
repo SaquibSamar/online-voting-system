@@ -1,84 +1,73 @@
-/* style.css */
-
+:root {
+  --bg: #0d0d0d;
+  --card: #0b0b12;
+  --neon1: #00f0ff;
+  --neon2: #b400;
+  --accent: #6666ff;
+  --color: #fff;
+  --display: flex;
+}
+* { box-sizing: border-box; }
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0d0d0d;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  margin: 5; min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color: #e9f7ff;
 }
-
-.container {
+header {
   text-align: center;
-  width: 90%;
-  max-width: 800px;
+  padding: 30px;
+  font-size: 29px;
+  color: var(--neon1);
+  text-shadow: 0 0 10px var(--neon1), 0 0 35px var(--neon2);
 }
-
-.title {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  color: #0ff;
-  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+.wrap { max-width: 1100px; margin: 20px auto; padding: 20px; }
+.grid { display: grid; grid-template-columns: 360px 1fr; gap: 24px; }
+.panel {
+  background: rgba(255,255,255,0.02);
+  border-radius: 19px;
+  padding: 18px;
+  border: 1px solid rgba(0,255,255,0.06);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
 }
-
+.toggle { display: flex; gap: 8px; margin-bottom: 14px; }
+.seg {
+  flex: 1; padding: 10px; border-radius: 10px;
+  text-align: center; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.seg.active {
+  background: linear-gradient(90deg, var(--neon1), var(--neon2));
+  color: #03030b; font-weight: 700;
+}
+label { display: block; font-size: 14px; margin-top: 10px; opacity: 0.8; }
+input {
+  width: 100%; padding: 10px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: transparent; color: var(--neon1);
+}
+.btn {
+  padding: 10px 14px; border-radius: 10px; border: none;
+  cursor: pointer; font-weight: 700; margin-top: 10px;
+  background: linear-gradient(90deg, var(--neon1), var(--neon2));
+  color: #05050a;
+}
+.btn.ghost {
+  background: transparent; border: 1px solid var(--neon1);
+  color: var(--neon1);
+}
+.membersList { display: flex; flex-wrap: wrap; gap: 12px; }
 .card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 20px 0;
-  box-shadow: 0 0 15px #0ff;
-  animation: fadeIn 1s ease;
+  width: 220px; padding: 14px; border-radius: 12px;
+  background: var(--card); border: 1px solid rgba(0,255,255,0.04);
+  transition: transform .28s, box-shadow .28s;
 }
-
-input, select {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  width: 80%;
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0,0,0,1);
 }
-
-button {
-  background: #0ff;
-  color: #000;
-  border: none;
-  padding: 10px 20px;
-  margin: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 0 5px #0ff;
-}
-
-button:hover {
-  background: #00cccc;
-  box-shadow: 0 0 15px #0ff, 0 0 25px #0ff;
-  transform: scale(1.05);
-}
-
-/* Neon delete button */
-button:contains('Delete') {
-  background: #ff0066;
-  color: #fff;
-  box-shadow: 0 0 5px #ff0066;
-}
-
-button:contains('Delete'):hover {
-  box-shadow: 0 0 15px #ff0066, 0 0 25px #ff3399;
-  transform: scale(1.1);
-}
-
-.hidden {
-  display: none;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.bg-lines {
+  position: fixed; inset: 0; z-index: -1;
+  background-image: linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 10px);
+  background-size: 120px 120px; opacity: 0.05;
 }
