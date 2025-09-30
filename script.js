@@ -2,12 +2,13 @@
 // Firebase Config
 // ============================
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDTtzUYj6iZ131SuXIfz5s72hk0-8syFsg",
+  authDomain: "online-voting-system-794b8.firebaseapp.com",
+  projectId: "online-voting-system-794b8",
+  storageBucket: "online-voting-system-794b8.firebasestorage.app",
+  messagingSenderId: "586108497801",
+  appId: "1:586108497801:web:470c5ed91d588738edfb58",
+  measurementId: "G-RH9Q4LNTEW"
 };
 firebase.initializeApp(firebaseConfig);
 
